@@ -1,0 +1,134 @@
+from bs4 import BeautifulSoup
+import os, sys
+import urllib3
+from urllib.request import Request, urlopen
+import time
+
+
+
+url="https://structurae.net/en/structures/autumn-footbridge"
+req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+try:
+    web_byte = urlopen(req).read()
+    webpage = web_byte.decode('utf-8')            
+except:
+    webpage = ""                     	
+
+soup = str(BeautifulSoup(webpage,'html.parser'))
+
+try:
+	title = soup.split('itemprop="name">')[1][:128].split("<")[0][:-1]
+except:
+	title = 0
+	
+try:
+	design = soup.split('Design</div>')[1][:256].split(">")[3][:-3]
+except:
+	design = 0
+try:
+	engineers = soup.split('Consulting engineers</div>')[1][:256].split(">")[3][:-3]
+except:
+	engineers = 0
+try:
+	contractor = soup.split('Contractor</div>')[1][:256].split(">")[3][:-3]
+except:
+	contractor = 0
+	
+    
+try:
+	use = soup.split('Status:')[1][:128].split("td")[1][2:-3]
+except:
+	use = 0
+try:
+	complate = soup.split('Completion:')[1][:128].split("td")[1].split(">")[2][:-3]
+except:
+	complate = 0
+try:
+	function = soup.split('Function / usage:')[1][:128].split("td")[1].split(">")[2][:-3]
+except:
+	function = 0
+try:
+	structure = soup.split('Structure:')[1][:128].split("td")[1].split(">")[2][:-3]
+except:
+	structure = 0
+try:
+	material = soup.split('Material:')[1][:128].split("td")[1].split(">")[2][:-3]
+except:
+	material = 0
+try:
+	coord = soup.split('Coordinates:')[1][:128].split(">")[2].split("<")[0][1:-1]
+except:
+	coord = 0
+try:
+	location = soup.split('Location:')[1][:1024].split('"')
+except:
+	location = 0
+try:
+	city = location[13]
+except:
+	city = 0
+try:
+	region = location[29]
+except:
+	region = 0
+try:
+	state = location[45]
+except:
+	state = 0
+	
+
+try:
+	body1 = soup.split('class="tabbody"')[1][:1280].split("<td>")
+except:
+	body1 = 0
+try:
+	body2 = soup.split('class="tabbody"')[2][:1280].split("<td>")
+except:
+	body2 = 0
+try:
+	body3 = soup.split('class="tabbody"')[3][:1280].split("<td>")
+except:
+	body3 = 0
+    
+try:
+    body1 = body1[1:]
+    for i in range(len(body1)):
+        body1[i] = body1[i].split("</td>")[0]
+except:
+	None
+
+try:
+	body2 = body2[1:]
+	for i in range(len(body2)):
+		body2[i] = body2[i].split("</td>")[0]
+except:
+	None
+try:
+	body3 = body3[1:]
+	for i in range(len(body3)):
+		body3[i] = body3[i].split("</td>")[0]
+except:
+	None
+	
+specs=[]
+
+try:
+    for i in range(int(len(body1)/2)):
+        specs.append(f"{str(body1[i*2])}={str(body1[i*2+1])}")
+except:
+	None
+
+print(title)
+print(design)
+print(engineers)
+print(contractor)
+print(use)
+print(function)
+print(structure)
+print(material)
+print(coord)
+print(city, region, state)
+print(complate)
+print(specs)
+print(body2)
+print(body3)
